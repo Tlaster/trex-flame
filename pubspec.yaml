@@ -28,4 +28,4 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/sprite.png
+    - lib/assets/images/sprite.png

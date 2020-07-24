@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flame/flame.dart';
 import 'package:flutter/material.dart';
 import 'package:flame_splash_screen/flame_splash_screen.dart';
@@ -34,13 +36,14 @@ class _TRexGameWrapperState extends State<TRexGameWrapper> {
     startGame();
   }
 
-  void startGame() {
-    Flame.images.loadAll(["sprite.png"]).then((image) => {
-      setState(() {
-        game = TRexGame(spriteImage: image[0]);
-        _focusNode.requestFocus();
-      })
-
+  void startGame() async {
+    final bytes = await DefaultAssetBundle.of(context)
+        .load("packages/tetris/lib/assets/images/sprite.png");
+    final codec = await ui.instantiateImageCodec(bytes.buffer.asUint8List());
+    final frame = await codec.getNextFrame();
+    setState(() {
+      game = TRexGame(spriteImage: frame.image);
+      _focusNode.requestFocus();
     });
   }
 
@@ -49,23 +52,23 @@ class _TRexGameWrapperState extends State<TRexGameWrapper> {
     return splashGone
         ? _buildGame(context)
         : FlameSplashScreen(
-      theme: FlameSplashTheme.white,
-      onFinish: (context) {
-        setState(() {
-          splashGone = true;
-        });
-      },
-    );
+            theme: FlameSplashTheme.white,
+            onFinish: (context) {
+              setState(() {
+                splashGone = true;
+              });
+            },
+          );
   }
 
   void _onRawKeyEvent(RawKeyEvent event) {
-    if(event.logicalKey == LogicalKeyboardKey.enter || event.logicalKey == LogicalKeyboardKey.space) {
+    if (event.logicalKey == LogicalKeyboardKey.enter ||
+        event.logicalKey == LogicalKeyboardKey.space) {
       game.onAction();
     }
   }
 
   Widget _buildGame(BuildContext context) {
-
     if (game == null) {
       return const Center(
         child: Text("Loading"),
@@ -76,12 +79,11 @@ class _TRexGameWrapperState extends State<TRexGameWrapper> {
       constraints: const BoxConstraints.expand(),
       child: Container(
           child: RawKeyboardListener(
-            key: ObjectKey("neh"),
-            child: game.widget,
-            focusNode: _focusNode,
-            onKey: _onRawKeyEvent,
-          )
-      ),
+        key: ObjectKey("neh"),
+        child: game.widget,
+        focusNode: _focusNode,
+        onKey: _onRawKeyEvent,
+      )),
     );
   }
 }
