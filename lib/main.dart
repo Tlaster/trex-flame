@@ -8,12 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:trex/game/game.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     title: 'TRexGame',
     color: Colors.white,
     debugShowCheckedModeBanner: false,
-    home: Scaffold(
-      body: TRexGameWrapper(),
+    home: const Scaffold(
+      body: const TRexGameWrapper(),
     ),
   ));
 
@@ -21,6 +21,8 @@ void main() {
 }
 
 class TRexGameWrapper extends StatefulWidget {
+  const TRexGameWrapper({Key key, this.size}) : super(key: key);
+  final Size size;
   @override
   _TRexGameWrapperState createState() => _TRexGameWrapperState();
 }
@@ -42,7 +44,10 @@ class _TRexGameWrapperState extends State<TRexGameWrapper> {
     final codec = await ui.instantiateImageCodec(bytes.buffer.asUint8List());
     final frame = await codec.getNextFrame();
     setState(() {
-      game = TRexGame(spriteImage: frame.image);
+      game = TRexGame(
+        spriteImage: frame.image,
+        size: widget.size,
+      );
       _focusNode.requestFocus();
     });
   }
@@ -79,7 +84,7 @@ class _TRexGameWrapperState extends State<TRexGameWrapper> {
       constraints: const BoxConstraints.expand(),
       child: Container(
           child: RawKeyboardListener(
-        key: ObjectKey("neh"),
+        key: const ObjectKey("neh"),
         child: game.widget,
         focusNode: _focusNode,
         onKey: _onRawKeyEvent,

@@ -29,9 +29,13 @@ class Bg extends Component with Resizable {
 
 enum TRexGameStatus { playing, waiting, gameOver }
 
-class TRexGame extends BaseGame with MultiTouchTapDetector, HasTapableComponents {
-  TRexGame({Image spriteImage}) {
+class TRexGame extends BaseGame
+    with MultiTouchTapDetector, HasTapableComponents {
+  TRexGame({Image spriteImage, Size size}) {
     tRex = TRex(spriteImage);
+    if (size != null) {
+      this.size = size;
+    }
     horizon = Horizon(spriteImage);
     gameOverPanel = GameOverPanel(spriteImage);
 
