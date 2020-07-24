@@ -38,7 +38,7 @@ class _TRexGameWrapperState extends State<TRexGameWrapper> {
 
   void startGame() async {
     final bytes = await DefaultAssetBundle.of(context)
-        .load("packages/tetris/lib/assets/images/sprite.png");
+        .load("packages/trex/lib/assets/images/sprite.png");
     final codec = await ui.instantiateImageCodec(bytes.buffer.asUint8List());
     final frame = await codec.getNextFrame();
     setState(() {
